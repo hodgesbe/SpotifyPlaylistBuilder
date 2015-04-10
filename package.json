@@ -1,6 +1,6 @@
 {
   "author": "ATeam",
-  "name": "Spotify Playlist App",
+  "name": "Spotify_Playlist_App",
   "description": "Using oauth2",
   "version": "0.0.1",
   "main": "serve.js",

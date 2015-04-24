@@ -3,39 +3,6 @@ var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 var mongoose = require('mongoose');
-var TrackModel;
-var TrackSchema;
-var trackCollection = 'unset'
-
-db = mongoose.createConnection();
-
-db.on('error', function() {
-console.log('Something terrible has happened...to your database, I think');
-});
-
-db.once('open', function() {
-    if (trackCollection==='unset') {
-     console.log('Something terrible has happened...to your collection name, I think');   
-    }
-//how to check if a collection exists
-    mongoose.connection.db.listCollection({name: trackCollection})
-    .next(function(err, collinfo) {
-        if (collinfo) {
-            console.log('Found your collection, man');
-        }
-    });
-	
-//we can determine what goes in the schema: genre?  album?  url of album art? artist?, etc.
-	TrackSchema = mongoose.Schema({
-		"name": String,
-		"genre": String,
-		"albumArt": String,
-        "artist": String
-	});
-    
-//if user's collection already exists, should retrieve existing model - test
-    var TrackModel = mongoose.model('Track', TrackSchema, trackCollection);
-});
 
 
 ///SPOTIFY LOGIN VARS/HELPER
@@ -127,6 +94,23 @@ app.get('/callback', function(req, res) {
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
           console.log(body);
+          mongoose.connect('mongodb://localhost/test');
+          var db = mongoose.connection;
+          db.on('error', console.error.bind(console, 'connection error:'));
+            db.once('open', function (callback) {
+                //we can determine what goes in the schema: genre?  album?  url of album art? artist?, etc.
+	var trackSchema = mongoose.Schema({
+		"name": String,
+		"genre": String,
+		"albumArt": String,
+        "artist": String
+	});
+    
+//if user's collection already exists, should retrieve existing model - test
+    var TrackModel = mongoose.model('Track', trackSchema, body.email);
+                console.log("Worked");
+ 
+});
         });
 
         // we can also pass the token to the browser to make requests from there
@@ -170,12 +154,7 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
-//USER IS LOGGED IN, FIRE UP THE DBASE
-app.post('/initDbase', function (req, res) {
-  console.log(req.body);    
-  //db.open('localhost', 'spotify', port, [opts]);
-  res.send('Got your init request, chief');
-});
+
 
 app.post('/addEntry', function (req, res) {
     

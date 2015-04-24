@@ -2,13 +2,50 @@ var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
+var mongoose = require('mongoose');
+var TrackModel;
+var TrackSchema;
+var trackCollection = 'unset'
 
+db = mongoose.createConnection();
+
+db.on('error', function() {
+console.log('Something terrible has happened...to your database, I think');
+});
+
+db.once('open', function() {
+    if (trackCollection==='unset') {
+     console.log('Something terrible has happened...to your collection name, I think');   
+    }
+//how to check if a collection exists
+    mongoose.connection.db.listCollection({name: trackCollection})
+    .next(function(err, collinfo) {
+        if (collinfo) {
+            console.log('Found your collection, man');
+        }
+    });
+	
+//we can determine what goes in the schema: genre?  album?  url of album art? artist?, etc.
+	TrackSchema = mongoose.Schema({
+		"name": String,
+		"genre": String,
+		"albumArt": String,
+        "artist": String
+	});
+    
+//if user's collection already exists, should retrieve existing model - test
+    var TrackModel = mongoose.model('Track', TrackSchema, trackCollection);
+});
+
+
+///SPOTIFY LOGIN VARS/HELPER
 var client_id = '9aa54e5b6fac4323951543510f964a82'; // Your client id
 var client_secret = 'b69a18826f204d18a52e0b1866bb6d0e'; // Your client secret
 var redirect_uri = 'http://localhost:8888/callback/'; // Your redirect uri
 
+var stateKey = 'spotify_auth_state';
 /**
- * Generates a random string containing numbers and letters
+ * Helper - Generates a random string containing numbers and letters
  * @param  {number} length The length of the string
  * @return {string} The generated string
  */
@@ -22,13 +59,13 @@ var generateRandomString = function(length) {
   return text;
 };
 
-var stateKey = 'spotify_auth_state';
-
+//INIT SERVER
 var app = express();
 
 app.use(express.static(__dirname + '/public'))
    .use(cookieParser());
 
+//DEFINE PATHS
 app.get('/login', function(req, res) {
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
@@ -45,6 +82,7 @@ app.get('/login', function(req, res) {
     }));
 });
 
+//POST-LOGIN
 app.get('/callback', function(req, res) {
 
   // your application requests refresh and access tokens
@@ -107,6 +145,7 @@ app.get('/callback', function(req, res) {
   }
 });
 
+//REFRESH_TOKEN FOR SPOTIFY AUTH
 app.get('/refresh_token', function(req, res) {
 
   // requesting access token from refresh token
@@ -129,6 +168,18 @@ app.get('/refresh_token', function(req, res) {
       });
     }
   });
+});
+
+//USER IS LOGGED IN, FIRE UP THE DBASE
+app.post('/initDbase', function (req, res) {
+  console.log(req.body);    
+  //db.open('localhost', 'spotify', port, [opts]);
+  res.send('Got your init request, chief');
+});
+
+app.post('/addEntry', function (req, res) {
+    
+  res.send('Got your entry, chief');
 });
 
 console.log('Listening on 8888');

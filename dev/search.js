@@ -23,7 +23,12 @@ $.getJSON("https://api.spotify.com/v1/search?q="+track+"&type=track&market=US",
             $tableRow.append('<td align="center">' + trackArr[i].album.name + '</td>');
             $tableRow.append('<td align="center">' + trackArr[i].name + '</td>');
             $tableRow.append('<td align="center"><a href=' + trackArr[i].preview_url + ' target="blank"><button type="button">Preview Track</button></a></td>');
-            $tableRow.append('<td align="center"><button type="button">Add to Database</button></td>');
+            $tableRow.append('<td align="center"><button type="button">Add to Database</button</td>')
+                .on("click", function(){
+                $.post('/addEntry', trackArr[i])
+                    .done(function() { console.log('Database success');})
+                        .fail(function () { console.log('Didnt work');})
+            });
             $responseTable.append($tableRow);
         }
 

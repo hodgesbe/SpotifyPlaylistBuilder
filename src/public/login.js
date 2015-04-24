@@ -47,7 +47,10 @@
                 },
                 success: function(response) {
                   userProfilePlaceholder.innerHTML = userProfileTemplate(response);
-
+                
+                $.post('/initDbase', reponse)
+                .done(function() { console.log('I told the server to initialize the database, man');})
+                .fail(function() { console.log('I tried to tell the server to init the dbase, man');});
                   $('#login').hide();
                   $('#loggedin').show();
                 }

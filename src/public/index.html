@@ -2,19 +2,27 @@
 <html>
   <head>
     <title>CSCI 344 - A Team - Music Webapp</title>
-          <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
-    <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+      <!-- JQUERY -->
+    <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+      <!-- BOOTSTRAP Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+      <!-- BOOTSTRAP Optional theme -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
 
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+      <!-- BOOTSTRAP Latest compiled and minified JavaScript -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+      
+      <!-- OUR STYLESHEET -->
+      <link rel="stylesheet" href="style.css">
+      
+      <!-- HANDLEBARS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
-
+      
+    <!-- JQUERY COOKIE PLUGIN -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    
+    <!-- OUR PAGE SCRIPT -->  
     <script src="login.js"></script>
   </head>
 
@@ -40,7 +48,11 @@
             </a>
             <div id="collapseOne" class="panel-collapse in">
               <div class="panel-body">
-                <input type="text" placeholder="Song, artist, or album">
+                <input type="text" id="searchVal" placeholder="Song, artist, or album">
+                  <button type="button" class="btn btn-default" id="searchButton" aria-label="Search">
+                      <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                  </button>
+
               </div>
             </div>
           </div>

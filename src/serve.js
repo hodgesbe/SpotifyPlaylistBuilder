@@ -3,6 +3,7 @@ var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 var mongoose = require('mongoose');
+
 var namedserver = "localhost";
 
 
@@ -30,6 +31,7 @@ var generateRandomString = function(length) {
 //INIT SERVER
 var app = express();
 
+//NEED THE COOKIE PARSER FOR LOGIN
 app.use(express.static(__dirname + '/public'))
    .use(cookieParser());
 
@@ -38,7 +40,7 @@ app.get('/login', function(req, res) {
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
 
-  // your application requests authorization
+  // REQUEST AUTH FROM USER
   var scope = 'user-read-private user-read-email';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
@@ -53,8 +55,7 @@ app.get('/login', function(req, res) {
 //POST-LOGIN
 app.get('/callback', function(req, res) {
 
-  // your application requests refresh and access tokens
-  // after checking the state parameter
+  // REQUEST ACCESS/REFRESH TOKENS
 
   var code = req.query.code || null;
   var state = req.query.state || null;
@@ -92,9 +93,9 @@ app.get('/callback', function(req, res) {
           json: true
         };
 
-        // use the access token to access the Spotify Web API
+        // USE ACCESS TOKEN TO GET USER INFO FROM SPOTIFY WEB API
         request.get(options, function(error, response, body) {
-          console.log(body);
+          //console.log(body); //prints user info to console
           mongoose.connect('mongodb://'+namedserver+'/test');
           var db = mongoose.connection;
           db.on('error', console.error.bind(console, 'connection error:'));
@@ -169,11 +170,13 @@ app.get('/refresh_token', function(req, res) {
 
 //server needs a path to save new documents in collection
 	app.post("/addEntry", function(req, res) {
-        var info = {'name': req.body.name, 'album': req.body.album.name, 'albumArt': req.body.album.images[req.body.album.images.length-1].url,                     'artist': req.body.artists[0].name };
-		var newTrack = new TrackModel(info);
-		newTrack.save(function(error, data) {
-			if (error) console.log(error);
-		});
+       
+        console.log(req);
+        // var info = {'name': req.body.name, 'album': req.body.album.name, 'albumArt': req.body.album.images[req.body.album.images.length-1].url,                     'artist': req.body.artists[0].name };
+		//var newTrack = new TrackModel(info);
+		//newTrack.save(function(error, data) {
+	//		if (error) console.log(error);
+//		});
 	});
     
 //server needs a path to delete documents from collection?

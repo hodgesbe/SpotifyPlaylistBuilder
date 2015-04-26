@@ -1,6 +1,6 @@
 
 body{
-    background: #99bd2e url("imgs/BGTile.png") repeat-x;
+    background: #077EFF url("imgs/BGTile.png") repeat-x;
 }
 .info-div-box{
     left: 10%;
@@ -14,9 +14,10 @@ body{
 #login{
     text-align: center;
 }
-.logo{
-    text-align: center;
-    width: 40%;
+IMG.logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto
 }
 #login, #loggedin {
         display: none;

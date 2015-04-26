@@ -20,9 +20,10 @@
 
   <body>
     <div class="container">
-      <div id="login">
+      <div id="login" class="info-div-box">
         <h1>CSCI 344 - A Team - Music Webapp</h1>
-        <a href="/login" class="btn btn-primary">Log in with Spotify</a>
+        <div class="logo"><img src="imgs/LogoMockup.png"></div>
+        <div><a href="/login" class="btn btn-primary">Log in with Spotify</a></div>
       </div>
       <div id="loggedin">
         <div id="user-profile">
@@ -81,7 +82,7 @@
 
     <script id="user-profile-template" type="text/x-handlebars-template">
       <div class="info-div-box">
-        <img src="imgs/LogoMockup.png">
+        <div class="logo"><img src="imgs/LogoMockup.png"></div>
       <h1>Logged in as {{display_name}}</h1>
       <div class="media">
         <div class="pull-left">

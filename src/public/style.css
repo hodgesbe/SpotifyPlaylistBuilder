@@ -6,9 +6,17 @@ body{
     background-color: #f0f8ff;
     border-radius: 20px;
     padding: 20px;
-    margin-bottom: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
-      #login, #loggedin {
+#login{
+    text-align: center;
+}
+.logo{
+    text-align: center;
+
+}
+#login, #loggedin {
         display: none;
       }
       .text-overflow {

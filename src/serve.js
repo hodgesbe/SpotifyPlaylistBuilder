@@ -3,12 +3,13 @@ var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 var mongoose = require('mongoose');
+var namedserver = "localhost";
 
 
 ///SPOTIFY LOGIN VARS/HELPER
 var client_id = '9aa54e5b6fac4323951543510f964a82'; // Your client id
 var client_secret = 'b69a18826f204d18a52e0b1866bb6d0e'; // Your client secret
-var redirect_uri = 'http://localhost:8888/callback/'; // Your redirect uri
+var redirect_uri = 'http://'+namedserver+':8888/callback/'; // Your redirect uri
 
 var stateKey = 'spotify_auth_state';
 /**
@@ -94,7 +95,7 @@ app.get('/callback', function(req, res) {
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
           console.log(body);
-          mongoose.connect('mongodb://localhost/test');
+          mongoose.connect('mongodb://'+namedserver+'/test');
           var db = mongoose.connection;
           db.on('error', console.error.bind(console, 'connection error:'));
             db.once('open', function (callback) {

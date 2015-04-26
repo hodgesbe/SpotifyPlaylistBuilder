@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 
 var TrackModel;
 var TrackSchema;
+var namedserver='localhost';
 
 db = mongoose.createConnection();
 
@@ -34,7 +35,7 @@ db.once('open', function() {
 });
 
 //if this database doesn't exist, I believe it will be created - test
-db.open('localhost', 'spotify', port, [opts]);
+db.open(namedserver, 'spotify', port, [opts]);
 
     
 //server needs a path to retrieve documents

@@ -10,7 +10,7 @@
         function runSearch(searchVal) {     
         var trackArr,
     //Creates a table with some basic styling. May need to remove the styling
-    $responseTable = $('<table border="1" style="width:100%">');
+    $responseTable = $('<table border="1" class="temp_search">');
             //CALL TO Spotify API
             $.getJSON("https://api.spotify.com/v1/search?q="+searchVal+"&type=track&market=US",
     function(data){
@@ -18,9 +18,9 @@
         console.log(trackArr);
         $('#search-results').append("<p>Spotify found: ");
     
-        $responseTable.append("<tr><th>Album Art</th><th>Artist</th><th>Album</th><th>Track</th><th>Preview</th><th>Add To Database</th></tr>");
+        $responseTable.append('<tr class="srtch-header"><th>Album Art</th><th>Artist</th><th>Album</th><th>Track</th><th>Preview</th><th>Add To Database</th></tr>');
         for (var i = 0;i < trackArr.length ; i++){
-            var $tableRow = $("<tr>");
+            var $tableRow = $('<tr  class="srtch-result">');
             $tableRow.append('<td align="center"><img src = ' + trackArr[i].album.images[trackArr[i].album.images.length-1].url+'></td>'); 
             $tableRow.append('<td align="center">' + trackArr[i].artists[0].name + '</td>');
             $tableRow.append('<td align="center">' + trackArr[i].album.name + '</td>');

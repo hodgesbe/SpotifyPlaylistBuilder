@@ -19,6 +19,49 @@ IMG.logo {
     margin-left: auto;
     margin-right: auto
 }
+
+TABLE.temp_search {
+    display: block;
+    position: static;
+    width: 95%;
+    border: solid;
+    border-color: darkmagenta;
+    padding: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+TABLE.temp_search th {
+    font-weight: bolder;
+    font-size: large;
+    color: #077EFF;
+}
+TABLE.temp_search td {
+    font-weight: bolder;
+    font-size: large;
+    color.: #000;
+}
+#srch-header{
+    border-bottom-style: double;
+    border-color: black;
+}
+#srch-album{
+    width: 15%;
+}
+#srch-artist{
+    width: 15%;
+}
+#srch-track{
+    width: 15%;
+}
+#srch-preview{
+    width: 15%;
+}
+#srch-add{
+    width: 15%;
+}
 #login, #loggedin {
         display: none;
       }

@@ -43,9 +43,10 @@ TABLE.temp_search td {
     font-size: large;
     color.: #000;
 }
-#srch-header{
+.srch-header{
     border-bottom-style: double;
     border-color: black;
+    text-align: center;
 }
 #srch-album{
     width: 15%;
@@ -61,6 +62,9 @@ TABLE.temp_search td {
 }
 #srch-add{
     width: 15%;
+}
+.srch_result{
+
 }
 #login, #loggedin {
         display: none;

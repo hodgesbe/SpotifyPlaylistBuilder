@@ -21,15 +21,16 @@ IMG.logo {
 }
 
 TABLE.temp_search {
+    font: normal 12px/20px "courier new", serif;
     display: block;
     position: static;
     width: 95%;
     border: solid;
-    border-color: darkmagenta;
+    border-color: #43ff27;
     padding: 5px;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 20px;
+    margin-top: 5px;
     margin-bottom: 20px;
 }
 
@@ -39,23 +40,23 @@ TABLE.temp_search th {
     color: #077EFF;
 }
 TABLE.temp_search td {
-    font-weight: bolder;
-    font-size: large;
+    font-weight: normal;
+    font-size: inherit;
     color.: #000;
 }
-.srch-header{
-    border-bottom-style: double;
+.srch-header th{
+    border-bottom: double;
     border-color: black;
     text-align: center;
 }
 #srch-album{
-    width: 15%;
+    width: 10%;
 }
 #srch-artist{
     width: 15%;
 }
 #srch-track{
-    width: 15%;
+    width: 20%;
 }
 #srch-preview{
     width: 15%;

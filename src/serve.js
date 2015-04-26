@@ -98,20 +98,21 @@ app.get('/callback', function(req, res) {
           mongoose.connect('mongodb://'+namedserver+'/test');
           var db = mongoose.connection;
           db.on('error', console.error.bind(console, 'connection error:'));
-            db.once('open', function (callback) {
+          db.once('open', function (callback) {
                 //we can determine what goes in the schema: genre?  album?  url of album art? artist?, etc.
 	var trackSchema = mongoose.Schema({
 		"name": String,
-		"genre": String,
+		"album": String,
 		"albumArt": String,
         "artist": String
 	});
     
 //if user's collection already exists, should retrieve existing model - test
-    var TrackModel = mongoose.model('Track', trackSchema, body.email);
-                console.log("Worked");
- 
+    var name = body.email.split("\@");
+    var TrackModel = mongoose.model('Track', trackSchema, name[0]+name[1]);
+      
 });
+            
         });
 
         // we can also pass the token to the browser to make requests from there
@@ -155,12 +156,33 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
+//server needs a path to retrieve documents
+	app.get("/getEntry", function(req, res) {
+		TrackModel.find(req.query, function(err, track) {
+			if (err) {
+				console.log(err);
+			} else {
+				res.json(track);
+			}
+		});
+	});
 
-
-app.post('/addEntry', function (req, res) {
+//server needs a path to save new documents in collection
+	app.post("/addEntry", function(req, res) {
+        var info = {'name': req.body.name, 'album': req.body.album.name, 'albumArt': req.body.album.images[req.body.album.images.length-1].url,                     'artist': req.body.artists[0].name };
+		var newTrack = new TrackModel(info);
+		newTrack.save(function(error, data) {
+			if (error) console.log(error);
+		});
+	});
     
-  res.send('Got your entry, chief');
-});
+//server needs a path to delete documents from collection?
+	app.post("/removeEntry", function(req, res) {
+		var oldTrack = new TrackModel(req.body);
+		oldTrack.remove(function(error, data) {
+			if (error) console.log(error);
+		});
+	});
 
 console.log('Listening on 8888');
 app.listen(8888);

@@ -1,5 +1,24 @@
 
-      #login, #loggedin {
+body{
+    background-color: #99bd2e;
+}
+.info-div-box{
+    left: 10%;
+    right: 10%;
+    background-color: #f0f8ff;
+    border-radius: 20px;
+    padding: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+#login{
+    text-align: center;
+}
+.logo{
+    text-align: center;
+    width: 40%;
+}
+#login, #loggedin {
         display: none;
       }
       .text-overflow {

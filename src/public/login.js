@@ -18,15 +18,15 @@
         console.log(trackArr);
         $('#search-results').append("<p>Spotify found: ");
     
-        $responseTable.append('<tr class="srtch-header"><th>Album Art</th><th>Artist</th><th>Album</th><th>Track</th><th>Preview</th><th>Add To Database</th></tr>');
+        $responseTable.append('<tr class="srtch-header"><th class="srch-art">Album Art</th><th class="srch-artist">Artist</th><th class="srch-album">Album</th><th class="srch-track">Track</th><th class="srch-preview">Preview</th><th class="srch-add">Add To Database</th></tr>');
         for (var i = 0;i < trackArr.length ; i++){
             var $tableRow = $('<tr  class="srtch-result">');
-            $tableRow.append('<td align="center"><img src = ' + trackArr[i].album.images[trackArr[i].album.images.length-1].url+'></td>'); 
-            $tableRow.append('<td align="center">' + trackArr[i].artists[0].name + '</td>');
-            $tableRow.append('<td align="center">' + trackArr[i].album.name + '</td>');
-            $tableRow.append('<td align="center">' + trackArr[i].name + '</td>');
-            $tableRow.append('<td align="center"><a href=' + trackArr[i].preview_url + ' target="blank"><button type="button">Preview Track</button></a></td>');
-            $tableRow.append('<td align="center"><button type="button">Add to Database</button></td>')
+            $tableRow.append('<td><img src = ' + trackArr[i].album.images[trackArr[i].album.images.length-1].url+'></td>');
+            $tableRow.append('<td class="srch-data">' + trackArr[i].artists[0].name + '</td>');
+            $tableRow.append('<td class="srch-data">' + trackArr[i].album.name + '</td>');
+            $tableRow.append('<td class="srch-data">' + trackArr[i].name + '</td>');
+            $tableRow.append('<td class="srch-data-btn"><a href=' + trackArr[i].preview_url + ' target="blank"><button type="button">Preview Track</button></a></td>');
+            $tableRow.append('<td class="srch-data-btn"><button type="button">Add to Database</button></td>')
                 .on("click", function(){
                     $(this).closest ('tr').remove();
                     $.ajax({

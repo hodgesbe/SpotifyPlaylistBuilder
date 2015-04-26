@@ -28,7 +28,7 @@
         <div id="user-profile">
         </div>
         <!--  BEN'S ADDITIONS START -->
-        <div id="accordion" class="panel-group">
+        <div id="accordion" class="panel-group info-div-box">
           <div class="panel panel-default">
             <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
               <div class="panel-heading">
@@ -80,6 +80,7 @@
     </div>
 
     <script id="user-profile-template" type="text/x-handlebars-template">
+      <div class="info-div-box">
       <h1>Logged in as {{display_name}}</h1>
       <div class="media">
         <div class="pull-left">
@@ -96,6 +97,7 @@
             <dt>Country</dt><dd>{{country}}</dd>
           </dl>
         </div>
+      </div>
       </div>
     </script>
 

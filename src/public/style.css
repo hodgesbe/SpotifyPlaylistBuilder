@@ -1,4 +1,13 @@
 
+body{
+    background-color: #99bd2e;
+}
+.info-div-box{
+    background-color: #f0f8ff;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
       #login, #loggedin {
         display: none;
       }

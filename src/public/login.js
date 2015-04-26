@@ -16,7 +16,7 @@
     function(data){
         trackArr = data.tracks.items;
         console.log(trackArr);
-        $('#collapseTwo').append("<p>Spotify found: ");
+        $('#search-results').append("<p>Spotify found: ");
     
         $responseTable.append("<tr><th>Album Art</th><th>Artist</th><th>Album</th><th>Track</th><th>Preview</th><th>Add To Database</th></tr>");
         for (var i = 0;i < trackArr.length ; i++){

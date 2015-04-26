@@ -40,7 +40,7 @@
             </a>
             <div id="collapseOne" class="panel-collapse in">
               <div class="panel-body">
-                <input type="text" placeholder="Song, artist, or album">
+                <input type="text" placeholder="Song, artist, or album"><button id="search-spotify">Search for Tracks</button>
               </div>
             </div>
           </div>
@@ -49,16 +49,15 @@
             <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
               <div class="panel-heading">
                 <h4 class="panel-title">
-                  Previous Searches
+                  Search Results
                 </h4>
               </div>
             </a>
             <div id="collapseTwo" class="panel-collapse collapse">
               <div class="panel-body">
-                <table>
-                  <tr><th>Title</th><th>Category</th><th>Link</th></tr>
-                  <tr><td></td><td></td><td></td></tr>
-                </table>
+                <div id="search-results">
+                  <!-- jQuery Table of Search results -->
+                </div>
               </div>
             </div>
           </div>

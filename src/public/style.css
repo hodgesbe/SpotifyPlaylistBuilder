@@ -1,6 +1,6 @@
 
 body{
-    background-color: #99bd2e;
+    background: #99bd2e url("imgs/BGTile.png") repeat-x;
 }
 .info-div-box{
     left: 10%;

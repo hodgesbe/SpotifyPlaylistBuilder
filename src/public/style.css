@@ -1,6 +1,6 @@
 
 body{
-    background-color: #99bd2e;
+    background: #077EFF url("imgs/BGTile.png") repeat-x;
 }
 .info-div-box{
     left: 10%;
@@ -14,9 +14,57 @@ body{
 #login{
     text-align: center;
 }
-.logo{
+IMG.logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+}
+
+TABLE.temp_search {
+    display: block;
+    position: static;
+    width: 95%;
+    border: solid;
+    border-color: darkmagenta;
+    padding: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+TABLE.temp_search th {
+    font-weight: bolder;
+    font-size: large;
+    color: #077EFF;
+}
+TABLE.temp_search td {
+    font-weight: bolder;
+    font-size: large;
+    color.: #000;
+}
+.srch-header{
+    border-bottom-style: double;
+    border-color: black;
     text-align: center;
-    width: 40%;
+}
+#srch-album{
+    width: 15%;
+}
+#srch-artist{
+    width: 15%;
+}
+#srch-track{
+    width: 15%;
+}
+#srch-preview{
+    width: 15%;
+}
+#srch-add{
+    width: 15%;
+}
+.srch_result{
+
 }
 #login, #loggedin {
         display: none;

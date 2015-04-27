@@ -108,8 +108,6 @@ app.get('/callback', function(req, res) {
 		"albumArt": String,
         "artist": String
 	});
-    
-//if user's collection already exists, should retrieve existing model - test
     var name = body.email.split("\@");
     TrackModel = mongoose.model('Track', trackSchema, name[0]+name[1]);
       
@@ -117,7 +115,7 @@ app.get('/callback', function(req, res) {
             
         });
 
-        // we can also pass the token to the browser to make requests from there
+        // pass to browser
         res.redirect('/#' +
           querystring.stringify({
             access_token: access_token,
@@ -158,39 +156,44 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
-//server needs a path to retrieve documents
+//server path to retrieve documents
 	app.get("/getEntry", function(req, res) {
 		TrackModel.find(req.query, function(err, track) {
 			if (err) {
 				console.log(err);
+                res.status(500).send("SERV: Query failure");
 			} else {
-				res.json(track);
+				res.status(200).send(track);         
 			}
 		});
 
-        res.sendStatus(200);
 	});
 
-//server needs a path to save new documents in collection
+//server path to save new documents in collection
 app.post('/addEntry', function(req, res) {
     'use strict';
+    console.log("DATABASE STORE --");
+    console.log(req.body);
     var obj = JSON.parse(req.body);
     var info = {"name": obj.name, "album": obj.album.name, "albumArt": obj.album.images[obj.album.images.length-1].url, "artist":           obj.artists[0].name };
     var newTrack = new TrackModel(info);
     newTrack.save(function(error, data) {
     if (error) console.log(error);		
     });
+    console.log(info);
 res.sendStatus(200);
 });
     
-//server needs a path to delete documents from collection?
+//server path to delete documents from collection
 	app.post("/removeEntry", function(req, res) {
+        console.log("DATABASE REM --");
 		var oldTrack = new TrackModel(JSON.parse(req.body));
 		oldTrack.remove(function(error, data) {
 			if (error) console.log(error);            
 		});
         res.sendStatus(200);
 	});
+
 
 console.log('Listening on 8888');
 app.listen(8888);

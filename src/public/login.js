@@ -23,59 +23,119 @@
    
             req.send(JSON.stringify(obj));
         }
-                function addEntry (context, obj) {
+        /**
+        *DATABASE ADD HELPER
+        *Add to database, remove table row
+        *@return void
+        */
+        function addEntry (context, obj) {
             $(context).closest ('tr').remove();
             var req = new XMLHttpRequest();
             req.open('POST', 'http://localhost:8888/addEntry');
             req.onreadystatechange = function (oEvent) {  
-    if (req.readyState === 4) {  
-        if (req.status === 200) {  
-          console.log("CLI: Add success");  
-        } else {  
+        if (req.readyState === 4) {  
+            if (req.status === 200) {  
+                console.log("CLI: Add success");  
+            } else {  
            console.log("CLI: Add error");  
+            }
         }
-    }
-            };
-   
-            req.send(JSON.stringify(obj));
+        };
+        req.send(JSON.stringify(obj));
         }
+          
+        /**
+        *DATABASE QUERY HELPER
+        *Get docs from database, add delete button
+        *@return void
+        */
+        function getAll () {
+            var req = new XMLHttpRequest();
+            req.open('GET', 'http://localhost:8888/getEntry');
+            req.onreadystatechange = function (oEvent) {  
+        if (req.readyState === 4) {  
+            if (req.status === 200) {  
+                console.log("CLI: Find success");
+                displayDB(JSON.parse(req.responseText));
+            } else {  
+           console.log("CLI: Find error");  
+            }
+        }
+        };
+        req.send();
+        }
+        /**
+        *DATABASE TABLE CREATOR
+        *Display docs from database
+        *@return void
+        */
+        function displayDB (data) {
+            var $dataTable = $('<table border="1" class="temp_search">');
+            $("personal-playlist").append("<p>Your saved tracks: ");
+            $dataTable.append('<tr class="srtch-header"><th class="srch-art">Album Art</th><th class="srch-artist">Artist</th><th class="srch-          album">Album</th><th class="srch-track">Track</th><th class="srch-add">Delete</th></tr>');
+            $.each(data, function(index, value) {
+            var $tableRow = $('<tr  class="srtch-result">');     
+            $tableRow.append('<td><img src = ' + value.albumArt +'></td>');
+            $tableRow.append('<td class="srch-data">' + value.artist + '</td>');
+            $tableRow.append('<td class="srch-data">' + value.album + '</td>');
+            $tableRow.append('<td class="srch-data">' + value.name + '</td>');
+            
+            //REMOVE FROM DBASE BUTTON FOR THIS TRACK
+            var $tableData = $('<td class="srch-data">');
+            var $remButton = $('<button/>')
+                .text('Delete')
+                .addClass('srch-data-btn')
+                .off().on("click", function() {removeEntry(this, value)});
+            $tableData.append($remButton);  
+            $tableRow.append($tableData);
+
+            $dataTable.append($tableRow);
+            });
+        $('#personal-playlist').empty();
+        $('#personal-playlist').append($dataTable);
+    
+        }
+
+          
         /**SEARCH BUTTON HANDLER
         * Searches spotify API for song
         * @return void
         */
         function runSearch(searchVal) {     
-        var trackArr,
-    
+       
     //CREATE TABLE
-    $responseTable = $('<table border="1" class="temp_search">');
+   var $responseTable = $('<table border="1" class="temp_search">');
     //CALL TO Spotify API
     $.getJSON("https://api.spotify.com/v1/search?q="+searchVal+"&type=track&market=US",
         function(data){
-        trackArr = data.tracks.items;
+        var trackArr = data.tracks.items;
         //console.log(trackArr); //prints results to console
+        
+        //clear old results
+        $('#search-results').empty();
         
         $('#search-results').append("<p>Spotify found: ");
         
         //TABLE HEADER
         $responseTable.append('<tr class="srtch-header"><th class="srch-art">Album Art</th><th class="srch-artist">Artist</th><th class="srch-          album">Album</th><th class="srch-track">Track</th><th class="srch-preview">Preview</th><th class="srch-add">Add To Database</th></tr>');
-        
+    
         //ITERATE OVER SEARCH RESULTS
-        for (var i = 0;i < trackArr.length ; i++){
+        $.each(trackArr, function(index, track) {
             //ADD IMAGE/DEETS TO TABLE
-            var thisTrack = trackArr[i];
+            
             var $tableRow = $('<tr  class="srtch-result">');
-            $tableRow.append('<td><img src = ' + thisTrack.album.images[thisTrack.album.images.length-1].url+'></td>');
-            $tableRow.append('<td class="srch-data">' + thisTrack.artists[0].name + '</td>');
-            $tableRow.append('<td class="srch-data">' + thisTrack.album.name + '</td>');
-            $tableRow.append('<td class="srch-data">' + thisTrack.name + '</td>');
+            $tableRow.append('<td><img src = ' + track.album.images[track.album.images.length-1].url+'></td>');
+            $tableRow.append('<td class="srch-data">' + track.artists[0].name + '</td>');
+            $tableRow.append('<td class="srch-data">' + track.album.name + '</td>');
+            $tableRow.append('<td class="srch-data">' + track.name + '</td>');
             
             //PREVIEW BUTTON FOR THIS TRACK
             var $tableData = $('<td class="srch-data">');
             var $playButton = $('<button/>')
-                .text('Play Preview')
+                .text('Preview')
                 .addClass('srch-data-btn');
             var $playAnchor = $('<a/>')
-                .attr('href', thisTrack.preview_url)
+                .attr('href', track.preview_url)
                 .attr('target', 'blank');
             $playAnchor.append($playButton);
             $tableData.append($playAnchor);  
@@ -86,14 +146,16 @@
             var $addButton = $('<button/>')
                 .text('Store')
                 .addClass('srch-data-btn')
-                .off().on("click", function() {addEntry(this, thisTrack)});
+                .off().on("click", function() {addEntry(this, track)});
             $tableData.append($addButton);  
             $tableRow.append($tableData);
 
             $responseTable.append($tableRow);
-        }
+        });
 
-        $('#collapseTwo').append($responseTable);
+        $('#search-results').append($responseTable);
+        $('#collapseOne').collapse('hide');
+        $('#collapseTwo').collapse('show');
 });
         }
         
@@ -139,6 +201,10 @@
                 runSearch($('#searchVal').val());
                 });
                   //user is logged in, show details
+                $('#accordion').show();
+                $('#collapseThree').on('show.bs.collapse', function() {
+                    getAll(this);
+                });
                   $('#login').hide();
                   $('#loggedin').show();
              

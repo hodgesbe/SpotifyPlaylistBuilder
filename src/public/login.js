@@ -2,7 +2,17 @@
          "use strict";
          
          var main = function() {
-             
+        /**
+        *DATABASE ENTRY HELPER
+        *Add track to database, remove table row
+        *@return void
+        */
+        function addEntry (context, obj) {
+            $(context).closest ('tr').remove();
+            var req = new XMLHttpRequest();
+            req.open('POST', 'http://localhost:8888/addEntry');
+            req.send(JSON.stringify(obj));
+        }
         /**SEARCH BUTTON HANDLER
         * Searches spotify API for song
         * @return void
@@ -20,30 +30,21 @@
     
         $responseTable.append('<tr class="srtch-header"><th class="srch-art">Album Art</th><th class="srch-artist">Artist</th><th class="srch-album">Album</th><th class="srch-track">Track</th><th class="srch-preview">Preview</th><th class="srch-add">Add To Database</th></tr>');
         for (var i = 0;i < trackArr.length ; i++){
+            var thisTrack = trackArr[i];
             var $tableRow = $('<tr  class="srtch-result">');
-            $tableRow.append('<td><img src = ' + trackArr[i].album.images[trackArr[i].album.images.length-1].url+'></td>');
-            $tableRow.append('<td class="srch-data">' + trackArr[i].artists[0].name + '</td>');
-            $tableRow.append('<td class="srch-data">' + trackArr[i].album.name + '</td>');
-            $tableRow.append('<td class="srch-data">' + trackArr[i].name + '</td>');
+            $tableRow.append('<td><img src = ' + thisTrack.album.images[thisTrack.album.images.length-1].url+'></td>');
+            $tableRow.append('<td class="srch-data">' + thisTrack.artists[0].name + '</td>');
+            $tableRow.append('<td class="srch-data">' + thisTrack.album.name + '</td>');
+            $tableRow.append('<td class="srch-data">' + thisTrack.name + '</td>');
             $tableRow.append('<td class="srch-data-btn"><a href=' + trackArr[i].preview_url + ' target="blank"><button type="button">Preview Track</button></a></td>');
-            $tableRow.append('<td class="srch-data-btn"><button type="button">Add to Database</button></td>')
-                .on("click", function(){
-                    $(this).closest ('tr').remove();
-                    $.ajax({
-        url: '/addEntry',
-        type: 'POST',
-        data: { json: JSON.stringify(trackArr[i])},
-        dataType: 'json',
-        success: function() { console.log('Database add success'); },
-        error: function(jqXHR,error, errorThrown) {  
-               if(jqXHR.status&&jqXHR.status==400){
-                    alert(jqXHR.responseText); 
-               }else{
-                   alert("Something went wrong");
-               }
-    }
-    });
-            });
+            var $tableData = $('<td class="srch-data">');
+            var $addButton = $('<button/>')
+    .text('Add to Database')
+    .addClass('srch-data-btn')
+    .off().on("click", function() {addEntry(this, thisTrack)});
+            $tableData.append($addButton);  
+            $tableRow.append($tableData);
+         
                       //  $.post('/addEntry', trackArr[i])
                     //        .done(function() { console.log('Database success');})
                     //            .fail(function () { console.log('Didnt work');})

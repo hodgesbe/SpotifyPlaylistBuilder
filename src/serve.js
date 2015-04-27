@@ -3,9 +3,9 @@ var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 var mongoose = require('mongoose');
-
+var bodyParser = require('body-parser');
 var namedserver = "localhost";
-
+var TrackModel;
 
 ///SPOTIFY LOGIN VARS/HELPER
 var client_id = '9aa54e5b6fac4323951543510f964a82'; // Your client id
@@ -33,7 +33,8 @@ var app = express();
 
 //NEED THE COOKIE PARSER FOR LOGIN
 app.use(express.static(__dirname + '/public'))
-   .use(cookieParser());
+   .use(cookieParser())
+    .use(bodyParser.text());
 
 //DEFINE PATHS
 app.get('/login', function(req, res) {
@@ -110,7 +111,7 @@ app.get('/callback', function(req, res) {
     
 //if user's collection already exists, should retrieve existing model - test
     var name = body.email.split("\@");
-    var TrackModel = mongoose.model('Track', trackSchema, name[0]+name[1]);
+    TrackModel = mongoose.model('Track', trackSchema, name[0]+name[1]);
       
 });
             
@@ -169,15 +170,18 @@ app.get('/refresh_token', function(req, res) {
 	});
 
 //server needs a path to save new documents in collection
-	app.post("/addEntry", function(req, res) {
-       
-        console.log(req);
-        // var info = {'name': req.body.name, 'album': req.body.album.name, 'albumArt': req.body.album.images[req.body.album.images.length-1].url,                     'artist': req.body.artists[0].name };
-		//var newTrack = new TrackModel(info);
-		//newTrack.save(function(error, data) {
-	//		if (error) console.log(error);
-//		});
-	});
+app.post('/addEntry', function(req, res) {
+    'use strict';
+
+    var obj = JSON.parse(req.body);
+
+    var info = {"name": obj.name, "album": obj.album.name, "albumArt": obj.album.images[obj.album.images.length-1].url, "artist":           obj.artists[0].name };
+    var newTrack = new TrackModel(info);
+    newTrack.save(function(error, data) {
+    if (error) console.log(error);		
+    });
+res.sendStatus(200);
+});
     
 //server needs a path to delete documents from collection?
 	app.post("/removeEntry", function(req, res) {

@@ -101,7 +101,7 @@ app.get('/callback', function(req, res) {
           var db = mongoose.connection;
           db.on('error', console.error.bind(console, 'connection error:'));
           db.once('open', function (callback) {
-                //we can determine what goes in the schema: genre?  album?  url of album art? artist?, etc.
+  
 	var trackSchema = mongoose.Schema({
 		"name": String,
 		"album": String,
@@ -167,14 +167,14 @@ app.get('/refresh_token', function(req, res) {
 				res.json(track);
 			}
 		});
+
+        res.sendStatus(200);
 	});
 
 //server needs a path to save new documents in collection
 app.post('/addEntry', function(req, res) {
     'use strict';
-
     var obj = JSON.parse(req.body);
-
     var info = {"name": obj.name, "album": obj.album.name, "albumArt": obj.album.images[obj.album.images.length-1].url, "artist":           obj.artists[0].name };
     var newTrack = new TrackModel(info);
     newTrack.save(function(error, data) {
@@ -185,10 +185,11 @@ res.sendStatus(200);
     
 //server needs a path to delete documents from collection?
 	app.post("/removeEntry", function(req, res) {
-		var oldTrack = new TrackModel(req.body);
+		var oldTrack = new TrackModel(JSON.parse(req.body));
 		oldTrack.remove(function(error, data) {
-			if (error) console.log(error);
+			if (error) console.log(error);            
 		});
+        res.sendStatus(200);
 	});
 
 console.log('Listening on 8888');

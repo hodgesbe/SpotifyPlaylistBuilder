@@ -3,14 +3,40 @@
          
          var main = function() {
         /**
-        *DATABASE ENTRY HELPER
-        *Add track to database, remove table row
+        *DATABASE REMOVE HELPER
+        *Remove from database, remove table row
         *@return void
         */
-        function addEntry (context, obj) {
+        function removeEntry (context, obj) {
+            $(context).closest ('tr').remove();
+            var req = new XMLHttpRequest();
+            req.open('POST', 'http://localhost:8888/removeEntry');
+            req.onreadystatechange = function (oEvent) {  
+    if (req.readyState === 4) {  
+        if (req.status === 200) {  
+          console.log("CLI: Remove success");  
+        } else {  
+           console.log("CLI: Remove error");  
+        }
+    }
+            };
+   
+            req.send(JSON.stringify(obj));
+        }
+                function addEntry (context, obj) {
             $(context).closest ('tr').remove();
             var req = new XMLHttpRequest();
             req.open('POST', 'http://localhost:8888/addEntry');
+            req.onreadystatechange = function (oEvent) {  
+    if (req.readyState === 4) {  
+        if (req.status === 200) {  
+          console.log("CLI: Add success");  
+        } else {  
+           console.log("CLI: Add error");  
+        }
+    }
+            };
+   
             req.send(JSON.stringify(obj));
         }
         /**SEARCH BUTTON HANDLER
@@ -19,44 +45,59 @@
         */
         function runSearch(searchVal) {     
         var trackArr,
-    //Creates a table with some basic styling. May need to remove the styling
-    $responseTable = $('<table border="1" class="temp_search">');
-            //CALL TO Spotify API
-            $.getJSON("https://api.spotify.com/v1/search?q="+searchVal+"&type=track&market=US",
-    function(data){
-        trackArr = data.tracks.items;
-        console.log(trackArr);
-        $('#search-results').append("<p>Spotify found: ");
     
-        $responseTable.append('<tr class="srtch-header"><th class="srch-art">Album Art</th><th class="srch-artist">Artist</th><th class="srch-album">Album</th><th class="srch-track">Track</th><th class="srch-preview">Preview</th><th class="srch-add">Add To Database</th></tr>');
+    //CREATE TABLE
+    $responseTable = $('<table border="1" class="temp_search">');
+    //CALL TO Spotify API
+    $.getJSON("https://api.spotify.com/v1/search?q="+searchVal+"&type=track&market=US",
+        function(data){
+        trackArr = data.tracks.items;
+        //console.log(trackArr); //prints results to console
+        
+        $('#search-results').append("<p>Spotify found: ");
+        
+        //TABLE HEADER
+        $responseTable.append('<tr class="srtch-header"><th class="srch-art">Album Art</th><th class="srch-artist">Artist</th><th class="srch-          album">Album</th><th class="srch-track">Track</th><th class="srch-preview">Preview</th><th class="srch-add">Add To Database</th></tr>');
+        
+        //ITERATE OVER SEARCH RESULTS
         for (var i = 0;i < trackArr.length ; i++){
+            //ADD IMAGE/DEETS TO TABLE
             var thisTrack = trackArr[i];
             var $tableRow = $('<tr  class="srtch-result">');
             $tableRow.append('<td><img src = ' + thisTrack.album.images[thisTrack.album.images.length-1].url+'></td>');
             $tableRow.append('<td class="srch-data">' + thisTrack.artists[0].name + '</td>');
             $tableRow.append('<td class="srch-data">' + thisTrack.album.name + '</td>');
             $tableRow.append('<td class="srch-data">' + thisTrack.name + '</td>');
-            $tableRow.append('<td class="srch-data-btn"><a href=' + trackArr[i].preview_url + ' target="blank"><button type="button">Preview Track</button></a></td>');
+            
+            //PREVIEW BUTTON FOR THIS TRACK
             var $tableData = $('<td class="srch-data">');
+            var $playButton = $('<button/>')
+                .text('Play Preview')
+                .addClass('srch-data-btn');
+            var $playAnchor = $('<a/>')
+                .attr('href', thisTrack.preview_url)
+                .attr('target', 'blank');
+            $playAnchor.append($playButton);
+            $tableData.append($playAnchor);  
+            $tableRow.append($tableData);
+            $tableData = $('<td class="srch-data">');
+            
+            //ADD TO DBASE BUTTON FOR THIS TRACK
             var $addButton = $('<button/>')
-    .text('Add to Database')
-    .addClass('srch-data-btn')
-    .off().on("click", function() {addEntry(this, thisTrack)});
+                .text('Store')
+                .addClass('srch-data-btn')
+                .off().on("click", function() {addEntry(this, thisTrack)});
             $tableData.append($addButton);  
             $tableRow.append($tableData);
-         
-                      //  $.post('/addEntry', trackArr[i])
-                    //        .done(function() { console.log('Database success');})
-                    //            .fail(function () { console.log('Didnt work');})
- 
-    //        });
+
             $responseTable.append($tableRow);
         }
 
         $('#collapseTwo').append($responseTable);
 });
         }
-        /**SPOTIFY HELPER
+        
+         /**SPOTIFY HELPER
          * Obtains parameters from the hash of the URL
          * @return Object
          */
@@ -74,8 +115,6 @@
             userProfileTemplate = Handlebars.compile(userProfileSource),
             userProfilePlaceholder = document.getElementById('user-profile');
 
-     
-
         var params = getHashParams();
 
         var access_token = params.access_token,
@@ -86,6 +125,7 @@
           alert('There was an error during the authentication');
         } else {
           if (access_token) {
+            //we have the token, get the user's info
             $.ajax({
                 url: 'https://api.spotify.com/v1/me',
                 headers: {
@@ -94,10 +134,11 @@
                 success: function(response) {
                   userProfilePlaceholder.innerHTML = userProfileTemplate(response);
                 
+                //attach search button handler once we're logged in
                 $('#searchButton').on('click', function () {
                 runSearch($('#searchVal').val());
                 });
-                  
+                  //user is logged in, show details
                   $('#login').hide();
                   $('#loggedin').show();
              

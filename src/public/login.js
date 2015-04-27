@@ -202,9 +202,22 @@
                 });
                   //user is logged in, show details
                 $('#accordion').show();
-                $('#collapseThree').on('show.bs.collapse', function() {
+             
+                $('#collapseThree').on('show.bs.collapse', function() { //fix
+                    $('#collapseTwo').collapse('hide');
+                    $('#collapseOne').collapse('hide');
                     getAll(this);
                 });
+                $('#collapseTwo').on('show.bs.collapse', function() {
+                    $('#collapseOne').collapse('hide');
+                    $('#collapseThree').collapse('hide');
+                });
+                     $('#collapseOne').on('show.bs.collapse', function() {
+                    $('#collapseTwo').collapse('hide');
+                    $('#collapseThree').collapse('hide');
+                });
+                
+                
                   $('#login').hide();
                   $('#loggedin').show();
              
@@ -212,6 +225,7 @@
             });
           } else {
               // render initial screen
+      
               $('#login').show();
               $('#loggedin').hide();
           }

@@ -36,14 +36,13 @@
       <div id="loggedin">
         <div id="user-profile">
         </div>
-        <!--  BEN'S ADDITIONS START -->
+      <!-- START OF ACCORDION LAYOUT ELEMENTS -->
         <div id="accordion" class="panel-group info-div-box">
+
+    <!--    PANEL1 START    -->
           <div class="panel panel-default">
             <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-              <div class="panel-heading">
-                <h4 class="panel-title">
-                  Search
-                </h4>
+              <div class="panel-heading"><h4 class="panel-title">Search</h4>
               </div>
             </a>
             <div id="collapseOne" class="panel-collapse in">
@@ -52,45 +51,38 @@
                   <button type="button" class="btn btn-default" id="searchButton" aria-label="Search">
                       <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                   </button>
-
               </div>
             </div>
           </div>
 
+    <!--    PANEL 2 START   -->
           <div class="panel panel-default">
             <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-              <div class="panel-heading">
-                <h4 class="panel-title">
-                  Previous Searches
-                </h4>
+              <div class="panel-heading"><h4 class="panel-title">Search Results</h4>
               </div>
             </a>
             <div id="collapseTwo" class="panel-collapse collapse">
               <div class="panel-body">
-                <table>
-                  <tr><th>Title</th><th>Category</th><th>Link</th></tr>
-                  <tr><td></td><td></td><td></td></tr>
-                </table>
+                <div id="search-results"><!-- THE SPOTIFY RESULTS ARE GENERATE HERE FROM login.js  --></div>
               </div>
             </div>
           </div>
-          <!--<div class="panel panel-default">
-              <div class="panel-heading">
-                  <h4 class="panel-title">
-                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">3. What is CSS?</a>
-                  </h4>
+    <!--    PANEL 3 START   -->
+          <div class="panel panel-default">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+              <div class="panel-heading"><h4 class="panel-title">Personal Playlist</h4>
               </div>
-              <div id="collapseThree" class="panel-collapse collapse">
-                  <div class="panel-body">
-                      <p>CSS stands for Cascading Style Sheet. CSS allows you to specify various style properties for a given HTML element such as colors, backgrounds, fonts etc. <a href="http://www.tutorialrepublic.com/css-tutorial/" target="_blank">Learn more.</a></p>
-                  </div>
+            </a>
+            <div id="collapseThree" class="panel-collapse collapse">
+              <div class="panel-body">
+                      <div id="personal-playlist">This is where the playlist table should go</div>
               </div>
-          </div>-->
+            </div>
+          </div>
         </div>
-        <!--  BEN'S ADDITIONS END -->
-      
-      </div>
-    </div>
+          <!-- END OF ACCORDION LAYOUT ELEMENTS -->
+        </div><!-- END OF LOGGED IN DIV ELEMENT -->
+      </div><!-- END OF CONTAINER DIV ELEMENT   -->
 
     <script id="user-profile-template" type="text/x-handlebars-template">
       <div class="info-div-box">

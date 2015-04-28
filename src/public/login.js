@@ -2,6 +2,7 @@
          "use strict";
          
          var main = function() {
+        var noPlaylist=false;
         /**
         *DATABASE REMOVE HELPER
         *Remove from database, remove table row
@@ -187,13 +188,57 @@
           alert('There was an error during the authentication');
         } else {
           if (access_token) {
-            //we have the token, get the user's info
-            $.ajax({
-                url: 'https://api.spotify.com/v1/me',
-                headers: {
-                  'Authorization': 'Bearer ' + access_token
-                },
-                success: function(response) {
+      
+  
+            //get user's info  
+    $.ajax({
+    url: 'https://api.spotify.com/v1/me',
+    headers: {'Authorization': 'Bearer ' + access_token},
+    success: function(response) {
+                    
+                          //we have the token, init playlist
+        var url = 'https://api.spotify.com/v1/users/' + response.id +'/playlists';
+	$.ajax(url, {
+		method: 'GET',
+		dataType: 'json',
+		headers: {
+			'Authorization': 'Bearer ' + access_token,
+			'Content-Type': 'application/json'
+		},
+		success: function(r) {
+			console.log('CLI: PLAYLIST LOOKUP RESPONSE', r);
+            var playlists = JSON.stringify(r);
+            if (playlists.indexOf("Web App")>-1) {
+                console.log('CLI: PLAYLIST ALREADY CREATED');
+                //nothing further, then
+            } else { noPlaylist = true;
+		}},
+		error: function(r) {
+			consloe.log("CLI: ERROR ON PLAYLIST LOOKUP");
+		}
+	}).done(function() {
+        if (noPlaylist) {
+            	$.ajax(url, {
+		method: 'POST',
+		data: JSON.stringify({
+			'name': 'Web App Playlist',
+			'public': true
+		}),
+		dataType: 'json',
+		headers: {
+			'Authorization': 'Bearer ' + access_token,
+			'Content-Type': 'application/json'
+		},
+		success: function(r) {
+			console.log('CLI: PLAYLIST CREATE RESPONSE', r);
+		},
+		error: function(r) {
+			consloe.log("CLI: ERROR CREATING PLAYLIST");
+		}
+	});
+    }});
+
+
                   userProfilePlaceholder.innerHTML = userProfileTemplate(response);
                 
                 //attach search button handler once we're logged in

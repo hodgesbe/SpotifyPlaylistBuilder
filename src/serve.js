@@ -42,7 +42,7 @@ app.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // REQUEST AUTH FROM USER
-  var scope = 'user-read-private user-read-email';
+  var scope = 'user-read-private user-read-email playlist-modify-private playlist-modify-private';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -81,13 +81,13 @@ app.get('/callback', function(req, res) {
       },
       json: true
     };
-
+    
     request.post(authOptions, function(error, response, body) {
       if (!error && response.statusCode === 200) {
-
+       
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
-
+        
         var options = {
           url: 'https://api.spotify.com/v1/me',
           headers: { 'Authorization': 'Bearer ' + access_token },
@@ -96,7 +96,8 @@ app.get('/callback', function(req, res) {
 
         // USE ACCESS TOKEN TO GET USER INFO FROM SPOTIFY WEB API
         request.get(options, function(error, response, body) {
-          //console.log(body); //prints user info to console
+  
+         console.log(body.id);
           mongoose.connect('mongodb://'+namedserver+'/test');
           var db = mongoose.connection;
           db.on('error', console.error.bind(console, 'connection error:'));
@@ -110,23 +111,25 @@ app.get('/callback', function(req, res) {
 	});
     var name = body.email.split("\@");
     TrackModel = mongoose.model('Track', trackSchema, name[0]+name[1]);
-      
+          
 });
-            
-        });
-
+     
+        });         
+         
         // pass to browser
         res.redirect('/#' +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token
           }));
+   
       } else {
         res.redirect('/#' +
           querystring.stringify({
             error: 'invalid_token'
           }));
       }
+    
     });
   }
 });
@@ -169,11 +172,14 @@ app.get('/refresh_token', function(req, res) {
 
 	});
 
+
+
+
+
 //server path to save new documents in collection
 app.post('/addEntry', function(req, res) {
     'use strict';
     console.log("DATABASE STORE --");
-    console.log(req.body);
     var obj = JSON.parse(req.body);
     var info = {"name": obj.name, "album": obj.album.name, "albumArt": obj.album.images[obj.album.images.length-1].url, "artist":           obj.artists[0].name };
     var newTrack = new TrackModel(info);
@@ -197,3 +203,4 @@ res.sendStatus(200);
 
 console.log('Listening on 8888');
 app.listen(8888);
+

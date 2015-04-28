@@ -3,6 +3,9 @@
          
          var main = function() {
         var noPlaylist=false;
+        var playlistID;
+        var access_token;
+        var userID;
         /**
         *DATABASE REMOVE HELPER
         *Remove from database, remove table row
@@ -66,6 +69,43 @@
         req.send();
         }
         /**
+        *TRACK EXPORT HELPER
+        *Add track to Spotify playlist from dbase.
+        *@return void
+        */
+        function exportTrack (track) {
+            var req = new XMLHttpRequest();
+            req.open('GET', 'http://localhost:8888/getEntry');
+            req.onreadystatechange = function (oEvent) {  
+        if (req.readyState === 4) {  
+            if (req.status === 200) {  
+            console.log("CLI: Find success");
+                var url = 'https://api.spotify.com/v1/users/'+userID+/playlists/+playlistID+'/tracks';
+       /*         $.ajax(url, {
+		method: 'POST',
+		data: JSON.stringify({
+			'track':'placeholder'
+		}),
+		dataType: 'json',
+		headers: {
+			'Authorization': 'Bearer ' + access_token,
+			'Content-Type': 'application/json'
+		},
+		success: function(r) {
+			console.log('CLI: PLAYLIST ADD RESPONSE', r);
+		},
+		error: function(r) {
+			consloe.log("CLI: ERROR ADDING TO PLAYLIST");
+		}
+	});*/
+            } else {  
+           console.log("CLI: Find error");  
+            }
+        }
+        };
+        req.send();
+        }
+        /**
         *DATABASE TABLE CREATOR
         *Display docs from database
         *@return void
@@ -73,7 +113,7 @@
         function displayDB (data) {
             var $dataTable = $('<table border="1" class="temp_search">');
             $("personal-playlist").append("<p>Your saved tracks: ");
-            $dataTable.append('<tr class="srtch-header"><th class="srch-art">Album Art</th><th class="srch-artist">Artist</th><th class="srch-          album">Album</th><th class="srch-track">Track</th><th class="srch-add">Delete</th></tr>');
+            $dataTable.append('<tr class="srtch-header"><th class="srch-art">Album Art</th><th class="srch-artist">Artist</th><th class="srch-          album">Album</th><th class="srch-track">Track</th><th class="srch-preview">Export to Playlist</th><th class="srch-add">Delete</th></tr>');
             $.each(data, function(index, value) {
             var $tableRow = $('<tr  class="srtch-result">');     
             $tableRow.append('<td><img src = ' + value.albumArt +'></td>');
@@ -81,8 +121,18 @@
             $tableRow.append('<td class="srch-data">' + value.album + '</td>');
             $tableRow.append('<td class="srch-data">' + value.name + '</td>');
             
-            //REMOVE FROM DBASE BUTTON FOR THIS TRACK
+            //EXPORT BUTTON FOR THIS TRACK
             var $tableData = $('<td class="srch-data">');
+            var $exportButton = $('<button/>')
+                .text('Export')
+                .addClass('srch-data-btn')
+                .off().on("click", function() {exportTrack(value)});
+            $tableData.append($exportButton);  
+            $tableRow.append($tableData);
+           
+                
+            //REMOVE FROM DBASE BUTTON FOR THIS TRACK
+            $tableData = $('<td class="srch-data">');
             var $remButton = $('<button/>')
                 .text('Delete')
                 .addClass('srch-data-btn')
@@ -180,24 +230,23 @@
 
         var params = getHashParams();
 
-        var access_token = params.access_token,
-            refresh_token = params.refresh_token,
+            access_token = params.access_token;
+            var refresh_token = params.refresh_token,
             error = params.error;
 
         if (error) {
           alert('There was an error during the authentication');
         } else {
           if (access_token) {
-      
-  
-            //get user's info  
+    //get user's info  
     $.ajax({
     url: 'https://api.spotify.com/v1/me',
     headers: {'Authorization': 'Bearer ' + access_token},
     success: function(response) {
-                    
-                          //we have the token, init playlist
-        var url = 'https://api.spotify.com/v1/users/' + response.id +'/playlists';
+        
+        //we have the token, init playlist
+        userID = response.id;
+        var url = 'https://api.spotify.com/v1/users/' + userID +'/playlists';
 	$.ajax(url, {
 		method: 'GET',
 		dataType: 'json',
@@ -209,8 +258,15 @@
 			console.log('CLI: PLAYLIST LOOKUP RESPONSE', r);
             var playlists = JSON.stringify(r);
             if (playlists.indexOf("Web App")>-1) {
+               $.each(r.items, function(index, value) {
+                if (value.name=="Web App Playlist") {
+                playlistID = value.id;
+                console.log("CLI: PLAYLIST ID ASSIGNED");
+                return false;
+                }
+               });
                 console.log('CLI: PLAYLIST ALREADY CREATED');
-                //nothing further, then
+                
             } else { noPlaylist = true;
 		}},
 		error: function(r) {
@@ -231,6 +287,7 @@
 		},
 		success: function(r) {
 			console.log('CLI: PLAYLIST CREATE RESPONSE', r);
+            playlistID = r.id;
 		},
 		error: function(r) {
 			consloe.log("CLI: ERROR CREATING PLAYLIST");

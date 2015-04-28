@@ -96,8 +96,6 @@ app.get('/callback', function(req, res) {
 
         // USE ACCESS TOKEN TO GET USER INFO FROM SPOTIFY WEB API
         request.get(options, function(error, response, body) {
-  
-         console.log(body.id);
           mongoose.connect('mongodb://'+namedserver+'/test');
           var db = mongoose.connection;
           db.on('error', console.error.bind(console, 'connection error:'));

@@ -79,13 +79,15 @@
             req.onreadystatechange = function (oEvent) {  
         if (req.readyState === 4) {  
             if (req.status === 200) {  
+            var tracks = [];
+            console.log(req.responseText);
+            var resp = JSON.parse(req.responseText);
+            tracks.push(resp[0].uri);
             console.log("CLI: Find success");
                 var url = 'https://api.spotify.com/v1/users/'+userID+/playlists/+playlistID+'/tracks';
-       /*         $.ajax(url, {
+              $.ajax(url, {
 		method: 'POST',
-		data: JSON.stringify({
-			'track':'placeholder'
-		}),
+		data: JSON.stringify(tracks),
 		dataType: 'json',
 		headers: {
 			'Authorization': 'Bearer ' + access_token,
@@ -95,9 +97,9 @@
 			console.log('CLI: PLAYLIST ADD RESPONSE', r);
 		},
 		error: function(r) {
-			consloe.log("CLI: ERROR ADDING TO PLAYLIST");
+			console.log("CLI: ERROR ADDING TO PLAYLIST");
 		}
-	});*/
+	});
             } else {  
            console.log("CLI: Find error");  
             }
@@ -160,7 +162,7 @@
     $.getJSON("https://api.spotify.com/v1/search?q="+searchVal+"&type=track&market=US",
         function(data){
         var trackArr = data.tracks.items;
-        //console.log(trackArr); //prints results to console
+        console.log(trackArr); //prints results to console
         
         //clear old results
         $('#search-results').empty();
@@ -270,7 +272,7 @@
             } else { noPlaylist = true;
 		}},
 		error: function(r) {
-			consloe.log("CLI: ERROR ON PLAYLIST LOOKUP");
+			console.log("CLI: ERROR ON PLAYLIST LOOKUP");
 		}
 	}).done(function() {
         if (noPlaylist) {
@@ -290,7 +292,7 @@
             playlistID = r.id;
 		},
 		error: function(r) {
-			consloe.log("CLI: ERROR CREATING PLAYLIST");
+			console.log("CLI: ERROR CREATING PLAYLIST");
 		}
 	});
     }});

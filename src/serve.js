@@ -105,10 +105,11 @@ app.get('/callback', function(req, res) {
 		"name": String,
 		"album": String,
 		"albumArt": String,
-        "artist": String
+        "artist": String,
+        "uri": String
 	});
     var name = body.email.split("\@");
-    TrackModel = mongoose.model('Track', trackSchema, name[0]+name[1]);
+    TrackModel = mongoose.model('Track', trackSchema, name[0]);
           
 });
      
@@ -179,7 +180,7 @@ app.post('/addEntry', function(req, res) {
     'use strict';
     console.log("DATABASE STORE --");
     var obj = JSON.parse(req.body);
-    var info = {"name": obj.name, "album": obj.album.name, "albumArt": obj.album.images[obj.album.images.length-1].url, "artist":           obj.artists[0].name };
+    var info = {"name": obj.name, "album": obj.album.name, "albumArt": obj.album.images[obj.album.images.length-1].url, "artist":           obj.artists[0].name, "uri":obj.uri };
     var newTrack = new TrackModel(info);
     newTrack.save(function(error, data) {
     if (error) console.log(error);		
